@@ -1,28 +1,20 @@
-# Ejercicio 1 - Leer líneas de un archivo
-
-
 def read_lines(filename):
-    """
-    Lee un archivo de texto y retorna una lista con sus líneas.
 
-    Reglas:
-    - Cada línea debe venir sin el salto de línea final y sin espacios
-      al principio o al final (strip).
-    - Las líneas vacías (o con solo espacios) se ignoran.
-    - Si el archivo no existe, se debe propagar FileNotFoundError.
-    - Si el archivo está vacío, retornar [].
+    # lista vacia donde se guardara todo
 
-    Args:
-        filename: str - nombre (o ruta) del archivo a leer.
+    lines = []
 
-    Returns:
-        list[str] - lista de líneas no vacías, en el orden del archivo.
+    # Abre el archivo en modo lectura ("r")
+    with open(filename, "r") as file:
 
-    Raises:
-        FileNotFoundError: si el archivo no existe.
+        # Recorre cada línea del archivo
+        for line in file:
 
-    Ejemplo:
-        # archivo contiene: "manzana\n  banana\npera\n"
-        read_lines("datos.txt") -> ["manzana", "banana", "pera"]
-    """
-    pass  # Reemplazar con tu implementación
+            # Elimina espacios al inicio/final y el salto de línea (\n)
+            clean_line = line.strip()
+            
+            # Si la línea NO está vacía, se agrega a la lista
+            if clean_line != "":
+                lines.append(clean_line)
+
+    return lines

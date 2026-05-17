@@ -1,37 +1,36 @@
-# Ejercicio 6 - Estadísticas de notas por estudiante
-
-
 def grades_stats(filename):
-    """
-    Lee un archivo donde cada línea tiene el formato:
 
-        estudiante:nota1,nota2,nota3,...
+    # Diccionario donde se guardarán
+    # estudiante (promedio, maximo, minimo)
+    stats = {}
 
-    y retorna un diccionario donde la clave es el nombre del estudiante y
-    el valor es una TUPLA (promedio, maximo, minimo) con los tres valores
-    como float.
+    # Abre el archivo en modo lectura
+    with open(filename, "r") as file:
 
-    Reglas:
-    - El promedio se calcula con todas las notas de la línea.
-    - Las líneas vacías se ignoran.
-    - Se garantiza que todas las notas son números válidos.
-    - Si el archivo no existe, propagar FileNotFoundError.
+        # Recorre cada línea
+        for line in file:
+            # Elimina espacios y saltos de línea
+            clean_line = line.strip()
+            # Ignora líneas vacías
+            if clean_line != "":
+                # Divide nombre y notas usando :
+                student, grades = clean_line.split(":")
+                # Divide las notas usando ,
+                grades_list = grades.split(",")
+                # Lista donde se guardarán las notas como float
+                numbers = []
+                # Recorre cada nota
+                for grade in grades_list:
+                    # Convierte la nota a float
+                    numbers.append(float(grade))
 
-    Args:
-        filename: str - nombre del archivo a leer.
+                # Calcula promedio
+                average = sum(numbers) / len(numbers)
+                # Calcula máximo
+                maximum = max(numbers)
+                # Calcula mínimo
+                minimum = min(numbers)
+                # Guarda la tupla en el diccionario
+                stats[student] = (average, maximum, minimum)
 
-    Returns:
-        dict[str, tuple[float, float, float]] - estadísticas por estudiante.
-
-    Raises:
-        FileNotFoundError: si el archivo no existe.
-
-    Ejemplo:
-        # archivo contiene: "Ana:8,9,7\nBeto:5,5,10\nCami:10\n"
-        grades_stats("notas.txt") -> {
-            "Ana": (8.0, 9.0, 7.0),
-            "Beto": (6.666666666666667, 10.0, 5.0),
-            "Cami": (10.0, 10.0, 10.0),
-        }
-    """
-    pass  # Reemplazar con tu implementación
+    return stats

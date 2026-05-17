@@ -1,45 +1,42 @@
-# Ejercicio 10 - Parser de archivos de log
-
-
 def parse_log(filename):
-    """
-    Lee un archivo de log donde cada línea tiene el formato:
 
-        NIVEL: mensaje
+    # Diccionario donde se guardarán:
+    # nivel -> lista de mensajes
+    logs = {}
 
-    y retorna un diccionario donde la clave es el nivel y el valor es una
-    lista con todos los mensajes de ese nivel, en el orden en que aparecen.
+    # Abre el archivo en modo lectura
+    with open(filename, "r") as file:
 
-    Reglas:
-    - Los niveles no son fijos: cualquier string antes del primer ':'
-      cuenta como nivel. El mensaje es todo lo que viene después del
-      primer ':'.
-    - Aplicar strip al nivel y al mensaje para eliminar espacios sobrantes.
-    - Las líneas vacías (o con solo espacios) se ignoran: NO son inválidas.
-    - Si alguna línea no vacía NO tiene ':', lanzar
-      ValueError("invalid log line").
-    - Si el archivo no existe, propagar FileNotFoundError.
+        # Recorre cada línea
+        for line in file:
 
-    Args:
-        filename: str - nombre del archivo a leer.
+            # Elimina espacios y saltos de línea
+            clean_line = line.strip()
 
-    Returns:
-        dict[str, list[str]] - mensajes agrupados por nivel.
+            # Ignora líneas vacías
+            if clean_line != "":
 
-    Raises:
-        FileNotFoundError: si el archivo no existe.
-        ValueError: si alguna línea no vacía no tiene ':'.
+                # Si la línea no tiene :
+                if ":" not in clean_line:
 
-    Ejemplo:
-        # archivo contiene:
-        # INFO: servidor iniciado
-        # ERROR: no se puede conectar
-        # INFO: reintentando
-        # WARN: lento
-        parse_log("server.log") -> {
-            "INFO": ["servidor iniciado", "reintentando"],
-            "ERROR": ["no se puede conectar"],
-            "WARN": ["lento"],
-        }
-    """
-    pass  # Reemplazar con tu implementación
+                    # Lanza un error
+                    raise ValueError("invalid log line")
+
+                # Divide usando SOLO el primer :
+                level, message = clean_line.split(":", 1)
+
+                # Elimina espacios sobrantes
+                level = level.strip()
+                message = message.strip()
+
+                # Si el nivel ya existe
+                if level in logs:
+
+                    logs[level].append(message)
+
+                else:
+
+                    # Crea la lista con el primer mensaje
+                    logs[level] = [message]
+
+    return logs

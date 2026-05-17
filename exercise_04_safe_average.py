@@ -1,31 +1,34 @@
-# Ejercicio 4 - Promedio seguro con manejo de errores
-
-
 def safe_average(filename):
-    """
-    Lee un archivo donde hay UN número por línea y retorna el promedio de
-    los números válidos (como float).
 
-    Reglas:
-    - Las líneas que no se puedan convertir a float deben ignorarse (usar
-      try/except ValueError internamente).
-    - Las líneas vacías también se ignoran.
-    - Si el archivo no existe, propagar FileNotFoundError.
-    - Si el archivo existe pero no contiene ningún número válido, lanzar
-      ValueError("no valid numbers").
+    # Lista donde se guardarán los números válidos
+    numbers = []
 
-    Args:
-        filename: str - nombre del archivo a leer.
+    # Abre el archivo en modo lectura
+    with open(filename, "r") as file:
 
-    Returns:
-        float - promedio de los números válidos.
+        for line in file:
+            # Elimina espacios y saltos de línea
+            clean_line = line.strip()
 
-    Raises:
-        FileNotFoundError: si el archivo no existe.
-        ValueError: si no hay números válidos en el archivo.
+            # Ignora líneas vacías
+            if clean_line != "":
+                try:
+                    # Intenta convertir la línea a float
+                    number = float(clean_line)
 
-    Ejemplo:
-        # archivo contiene: "10\n20\nno_es_un_numero\n30\n"
-        safe_average("numeros.txt") -> 20.0
-    """
-    pass  # Reemplazar con tu implementación
+                    # Guarda el número válido
+                    numbers.append(number)
+
+                # Si no se puede convertir, se ignora
+                except ValueError:
+                    pass
+
+    if len(numbers) == 0:
+        # Lanza un error si no hay numeros validos
+        raise ValueError("no valid numbers")
+
+    # Calcula el promedio
+    average = sum(numbers) / len(numbers)
+
+    # Retorna el promedio
+    return average

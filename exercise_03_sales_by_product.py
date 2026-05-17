@@ -1,56 +1,48 @@
-# Ejercicio 3 - Ventas por producto
-
-
 def read_sales(filename):
-    """
-    Lee un archivo con ventas en formato "producto:valor;producto:valor;..."
-    (todo en una sola línea, los registros separados por ';') y agrupa los
-    valores en una lista por producto.
 
-    Reglas:
-    - Los valores se convierten a float.
-    - El orden de los montos dentro de la lista es el mismo en que aparecen
-      en el archivo.
-    - Los separadores ';' finales sin contenido se ignoran (es común que
-      el archivo termine con ';').
-    - Si el archivo no existe, propagar FileNotFoundError.
+    sales = {}
 
-    Args:
-        filename: str - nombre del archivo a leer.
+    # Abre el archivo en modo lectura
+    with open(filename, "r") as file:
 
-    Returns:
-        dict[str, list[float]] - montos de venta agrupados por producto.
+        # Lee todo el contenido
+        content = file.read()
 
-    Raises:
-        FileNotFoundError: si el archivo no existe.
+        # Divide los registros usando ";"
+        records = content.split(";")
 
-    Ejemplo:
-        # archivo contiene: "producto1:100;producto2:200;producto1:150;"
-        read_sales("ventas.txt") -> {
-            "producto1": [100.0, 150.0],
-            "producto2": [200.0],
-        }
-    """
-    pass  # Reemplazar con tu implementación
+        # Recorre cada registro
+        for record in records:
+
+            # Ignora registros vacÃ­os
+            if record != "":
+
+                # Divide producto y valor usando ":"
+                product, value = record.split(":")
+
+                # Convierte el valor a float
+                value = float(value)
+
+                if product in sales:
+                    sales[product].append(value)
+                else:
+                    sales[product] = [value]
+
+    return sales
 
 
 def process_sales(data):
-    """
-    Para cada producto del diccionario, imprime en el orden natural del dict:
 
-        producto: ventas totales $X.XX, promedio $Y.YY
+    for product in data:
 
-    Los valores de total y promedio deben mostrarse siempre con DOS
-    decimales.
+        # Obtiene la lista de ventas
+        values = data[product]
 
-    Args:
-        data: dict[str, list[float]] - salida de read_sales.
+        # Calcula el total
+        total = sum(values)
 
-    Returns:
-        None
+        # Calcula el promedio
+        average = total / len(values)
 
-    Ejemplo:
-        process_sales({"producto1": [100.0, 150.0]})
-        # imprime: "producto1: ventas totales $250.00, promedio $125.00"
-    """
-    pass  # Reemplazar con tu implementación
+        # Imprime el resultado con 2 decimales
+        print(f"{product}: ventas totales ${total:.2f}, promedio ${average:.2f}")
